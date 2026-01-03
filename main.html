@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D&D Campaign: Planet Aetheria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --parchment: #f4e9d8;
+            --dark-parchment: #e0d0b8;
+            --ink: #2c1810;
+            --gold: #d4af37;
+            --silver: #c0c0c0;
+            --leather: #8b4513;
+            --crimson: #8b0000;
+            --forest: #2d5016;
+            --deep-blue: #1a2a6c;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+        
+        body {
+            background: 
+                radial-gradient(ellipse at center, var(--deep-blue) 0%, #0a0a1a 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230a0a1a"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%231a2a6c" stroke-width="0.5"/></svg>');
+            color: var(--parchment);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Cinzel', 'Georgia', serif;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            position: relative;
+            border-bottom: 3px solid var(--gold);
+            background: 
+                linear-gradient(to right, transparent 0%, rgba(212, 175, 55, 0.1) 50%, transparent 100%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="60" viewBox="0 0 200 60"><path d="M0,30 Q50,0 100,30 T200,30" stroke="%23d4af37" stroke-width="2" fill="none"/></svg>') center 100% no-repeat;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            color: var(--gold);
+            text-shadow: 3px 3px 0 var(--shadow), 0 0 20px rgba(212, 175, 55, 0.5);
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1:before, h1:after {
+            content: "✦";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--silver);
+            font-size: 2rem;
+        }
+        
+        h1:before {
+            left: -50px;
+        }
+        
+        h1:after {
+            right: -50px;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: var(--silver);
+            font-style: italic;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px var(--shadow);
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .planet-section {
+            background: rgba(20, 15, 10, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid var(--leather);
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.5),
+                0 10px 30px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .planet-section:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--gold), var(--silver), var(--gold));
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--leather);
+            text-shadow: 1px 1px 2px var(--shadow);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background: var(--gold);
+        }
+        
+        #planet-container {
+            width: 100%;
+            height: 550px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 3px solid var(--leather);
+            box-shadow: 
+                0 0 30px rgba(212, 175, 55, 0.3),
+                inset 0 0 20px rgba(0, 0, 0, 0.8);
+            background: #000;
+            position: relative;
+        }
+        
+        #planet-container:before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--gold), var(--silver), var(--gold));
+            z-index: -1;
+            border-radius: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+        
+        .control-btn {
+            background: linear-gradient(to bottom, var(--leather), #6b3309);
+            color: var(--parchment);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px var(--shadow);
+            font-family: 'Cinzel', serif;
+            border: 1px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-btn:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+        
+        .control-btn:hover:before {
+            left: 100%;
+        }
+        
+        .control-btn:hover {
+            background: linear-gradient(to bottom, #9c5c2a, var(--leather));
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px var(--shadow);
+        }
+        
+        .control-btn.active {
+            background: linear-gradient(to bottom, var(--gold), #b8860b);
+            color: var(--ink);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+        }
+        
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .planet-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .stat {
+            background: rgba(30, 20, 10, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--leather);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s;
+        }
+        
+        .stat:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            color: var(--gold);
+            font-weight: bold;
+            text-shadow: 1px 1px 2px var(--shadow);
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--silver);
+            margin-top: 5px;
+            font-family: 'Crimson Text', serif;
+        }
+        
+        /* Lorebooks Section */
+        .lorebooks-section {
+            margin-top: 40px;
+        }
+        
+        .lorebooks-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 1000px) {
+            .lorebooks-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .lorebook {
+            background: var(--parchment);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 3px solid var(--leather);
+            box-shadow: 0 10px 25px var(--shadow);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            color: var(--ink);
+            height: 450px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform-origin: left center;
+        }
+        
+        .lorebook.open {
+            transform: rotateY(-30deg);
+            box-shadow: -15px 10px 30px var(--shadow);
+        }
+        
+        .lorebook-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--leather) 0%, #6b3309 100%);
+            border-right: 2px solid var(--gold);
+        }
+        
+        .lorebook.open .lorebook-cover {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .lorebook-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 30px;
+            overflow-y: auto;
+            backface-visibility: hidden;
+            transform: rotateY(180deg);
+            background: var(--parchment);
+            background-image: 
+                linear-gradient(rgba(244, 233, 216, 0.7), rgba(244, 233, 216, 0.7)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50,0 Q75,25 50,50 Q25,75 50,100 Q75,75 100,50 Q75,25 50,0" fill="%23d4af37" opacity="0.1"/></svg>');
+        }
+        
+        .lorebook.open .lorebook-content {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .book-icon {
+            font-size: 4rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px var(--shadow);
+        }
+        
+        .book-title {
+            font-size: 2rem;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px var(--shadow);
+        }
+        
+        .book-subtitle {
+            font-style: italic;
+            color: var(--silver);
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .open-book-btn {
+            background: var(--gold);
+            color: var(--ink);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px var(--shadow);
+        }
+        
+        .open-book-btn:hover {
+            background: #e6c158;
+            transform: translateY(-3px);
+        }
+        
+        .close-book-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--crimson);
+            color: var(--parchment);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .lorebook-content h3 {
+            color: var(--forest);
+            margin: 20px 0 10px;
+            border-bottom: 1px solid var(--leather);
+            padding-bottom: 5px;
+        }
+        
+        .lorebook-content p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .lorebook-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .lorebook-content li {
+            margin-bottom: 8px;
+        }
+        
+        /* Region Selection */
+        .region-list {
+            list-style-type: none;
+            margin-bottom: 30px;
+        }
+        
+        .region-item {
+            background: rgba(30, 20, 10, 0.8);
+            margin-bottom: 15px;
+            padding: 18px;
+            border-radius: 8px;
+            border-left: 5px solid var(--gold);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .region-item:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: 0.5s;
+        }
+        
+        .region-item:hover:before {
+            left: 100%;
+        }
+        
+        .region-item:hover {
+            background: rgba(40, 30, 15, 0.9);
+            transform: translateX(5px);
+            border-color: var(--gold);
+        }
+        
+        .region-item.active {
+            background: rgba(50, 35, 15, 0.9);
+            border-left: 5px solid var(--crimson);
+            box-shadow: inset 0 0 15px rgba(139, 0, 0, 0.3);
+        }
+        
+        .region-title {
+            font-size: 1.4rem;
+            color: var(--gold);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .region-desc {
+            color: var(--silver);
+            font-size: 1rem;
+            line-height: 1.5;
+            font-family: 'Crimson Text', serif;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 2px solid var(--leather);
+            color: var(--silver);
+            font-size: 0.9rem;
+            font-family: 'Crimson Text', serif;
+            position: relative;
+        }
+        
+        footer:before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+        
+        .campaign-notes {
+            background: rgba(20, 15, 10, 0.9);
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid var(--leather);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .campaign-notes h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .campaign-notes p {
+            line-height: 1.7;
+            margin-bottom: 15px;
+            font-family: 'Crimson Text', serif;
+        }
+        
+        .campaign-notes strong {
+            color: var(--crimson);
+        }
+        
+        .info-section {
+            background: rgba(20, 15, 10, 0.7);
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid var(--leather);
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.5),
+                0 10px 30px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .info-section:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--gold), var(--silver), var(--gold));
+            z-index: 1;
+        }
+        
+        .upload-section {
+            background: rgba(20, 15, 10, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 25px;
+            border: 1px dashed var(--gold);
+            text-align: center;
+        }
+        
+        .upload-section p {
+            margin-bottom: 15px;
+            color: var(--silver);
+            font-family: 'Crimson Text', serif;
+        }
+        
+        /* Decorative Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 15, 10, 0.8);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--leather), #6b3309);
+            border-radius: 5px;
+            border: 1px solid var(--gold);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #9c5c2a, var(--leather));
+        }
+        
+        /* Floating particles for atmosphere */
+        .floating-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h1:before, h1:after {
+                display: none;
+            }
+            
+            #planet-container {
+                height: 400px;
+            }
+            
+            .lorebook {
+                height: 400px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="floating-particle" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
+    <div class="floating-particle" style="top: 20%; left: 90%; animation-delay: 2s;"></div>
+    <div class="floating-particle" style="top: 40%; left: 15%; animation-delay: 4s;"></div>
+    <div class="floating-particle" style="top: 60%; left: 80%; animation-delay: 6s;"></div>
+    <div class="floating-particle" style="top: 80%; left: 10%; animation-delay: 8s;"></div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-dragon"></i> Planet Aetheria</h1>
+            <p class="subtitle">A realm of arcane mysteries, ancient creatures, and epic adventures</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="planet-section">
+                <h2 class="section-title">Planetary Observer</h2>
+                <div id="planet-container"></div>
+                
+                <div class="controls">
+                    <button class="control-btn active" id="rotate-btn">
+                        <i class="fas fa-sync-alt"></i> Auto-Rotate
+                    </button>
+                    <button class="control-btn" id="grid-toggle">
+                        <i class="fas fa-th"></i> Toggle Grid
+                    </button>
+                    <button class="control-btn active" id="cloud-toggle">
+                        <i class="fas fa-cloud"></i> Clouds
+                    </button>
+                    <button class="control-btn" id="zoom-in-btn">
+                        <i class="fas fa-search-plus"></i> Zoom In
+                    </button>
+                    <button class="control-btn" id="zoom-out-btn">
+                        <i class="fas fa-search-minus"></i> Zoom Out
+                    </button>
+                    <button class="control-btn" id="reset-btn">
+                        <i class="fas fa-redo"></i> Reset View
+                    </button>
+                </div>
+                
+                <div class="upload-section">
+                    <p><i class="fas fa-upload"></i> Upload your own planetary map (PNG or JPG)</p>
+                    <div class="file-upload">
+                        <button class="control-btn">
+                            <i class="fas fa-file-upload"></i> Choose File
+                        </button>
+                        <input type="file" id="texture-upload" accept=".png,.jpg,.jpeg">
+                    </div>
+                    <span id="file-name" style="margin-left: 15px; color: var(--silver); font-size: 0.9rem;"></span>
+                </div>
+                
+                <div class="planet-stats">
+                    <div class="stat">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Major Regions</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Mystical Moons</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">127%</div>
+                        <div class="stat-label">Arcane Gravity</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">40h</div>
+                        <div class="stat-label">Day Length</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h2 class="section-title">Planetary Regions</h2>
+                <p style="margin-bottom: 20px; font-family: 'Crimson Text', serif; color: var(--silver);">Click on a region to view details and campaign notes. Each region holds unique secrets for your adventuring party.</p>
+                
+                <ul class="region-list">
+                    <li class="region-item active" data-region="crystal">
+                        <div class="region-title">
+                            <span>Crystal Peaks</span>
+                            <span><i class="fas fa-mountain"></i></span>
+                        </div>
+                        <div class="region-desc">Towering mountains with crystalline formations that amplify and distort magic.</div>
+                    </li>
+                    <li class="region-item" data-region="verdant">
+                        <div class="region-title">
+                            <span>Verdant Expanse</span>
+                            <span><i class="fas fa-tree"></i></span>
+                        </div>
+                        <div class="region-desc">Ancient sentient forests with hidden elven cities and predatory flora.</div>
+                    </li>
+                    <li class="region-item" data-region="shattered">
+                        <div class="region-title">
+                            <span>Shattered Wastes</span>
+                            <span><i class="fas fa-skull-crossbones"></i></span>
+                        </div>
+                        <div class="region-desc">A desolate landscape scarred by an ancient magical cataclysm.</div>
+                    </li>
+                    <li class="region-item" data-region="azure">
+                        <div class="region-title">
+                            <span>Azure Depths</span>
+                            <span><i class="fas fa-water"></i></span>
+                        </div>
+                        <div class="region-desc">Vast oceans with floating islands, merfolk cities, and leviathans.</div>
+                    </li>
+                    <li class="region-item" data-region="embersand">
+                        <div class="region-title">
+                            <span>Embersand Desert</span>
+                            <span><i class="fas fa-sun"></i></span>
+                        </div>
+                        <div class="region-desc">A magical desert where sands glow with residual arcane energy.</div>
+                    </li>
+                </ul>
+                
+                <div class="campaign-notes">
+                    <h3><i class="fas fa-scroll"></i> Campaign Notes: Crystal Peaks</h3>
+                    <p>The Crystal Peaks are home to the reclusive Dwarven clans who mine the magical crystals that grow naturally within the mountains. These crystals can store and amplify magic, making them highly sought after by wizards and artificers across Aetheria.</p>
+                    <p><strong>Plot Hook:</strong> The party is hired to escort a crystal shipment to the capital, but discovers the crystals are being used for a sinister purpose by a cult trying to awaken an ancient earth elemental.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="lorebooks-section">
+            <h2 class="section-title">Arcane Lorebooks</h2>
+            <p style="margin-bottom: 20px; font-family: 'Crimson Text', serif; color: var(--silver);">Click on a book to unveil its secrets. Each volume contains vital knowledge for your campaign.</p>
+            
+            <div class="lorebooks-container">
+                <div class="lorebook" id="history-book">
+                    <div class="lorebook-cover">
+                        <div class="book-icon">
+                            <i class="fas fa-landmark"></i>
+                        </div>
+                        <div class="book-title">Chronicles of Aetheria</div>
+                        <div class="book-subtitle">History & Mythology</div>
+                        <button class="open-book-btn">Open Tome</button>
+                    </div>
+                    <div class="lorebook-content">
+                        <button class="close-book-btn">×</button>
+                        <h3>The Creation</h3>
+                        <p>Aetheria was formed from the coalescing essence of the Astral Sea, shaped by the primordial titans in the Dawn Age. The world's magical nature stems from this celestial origin.</p>
+                        
+                        <h3>The Age of Titans</h3>
+                        <p>For millennia, elemental titans ruled the planet, shaping its mountains, oceans, and skies. Their conflicts created the magical leylines that crisscross the planet's surface.</p>
+                        
+                        <h3>The Mortal Dawn</h3>
+                        <p>The first mortal races emerged from the titans' experiments: Elves from starlight, Dwarves from stone, Humans from clay, and others from various elemental forces.</p>
+                        
+                        <h3>The Cataclysm</h3>
+                        <p>800 years ago, a war between arcane empires resulted in the Sundering—a magical disaster that created the Shattered Wastes and altered the planet's magical field forever.</p>
+                    </div>
+                </div>
+                
+                <div class="lorebook" id="bestiary-book">
+                    <div class="lorebook-cover">
+                        <div class="book-icon">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <div class="book-title">Bestiary & Flora</div>
+                        <div class="book-subtitle">Creatures & Plants of Aetheria</div>
+                        <button class="open-book-btn">Open Tome</button>
+                    </div>
+                    <div class="lorebook-content">
+                        <button class="close-book-btn">×</button>
+                        <h3>Unique Creatures</h3>
+                        <ul>
+                            <li><strong>Crystal Drakes:</strong> Wingless dragons that feed on magical energy, found in Crystal Peaks.</li>
+                            <li><strong>Whisperwolves:</strong> Canine predators that move silently through the Verdant Expanse.</li>
+                            <li><strong>Sandsnappers:</strong> Burrowing predators of the Embersand Desert with crystalline teeth.</li>
+                            <li><strong>Leviathan Rays:</strong> Massive filter feeders of the Azure Depths, with bioluminescent patterns.</li>
+                        </ul>
+                        
+                        <h3>Magical Flora</h3>
+                        <ul>
+                            <li><strong>Memory Moss:</strong> Absorbs and replays nearby sounds and emotions.</li>
+                            <li><strong>Starbloom:</strong> Flowers that glow at night and point toward leylines.</li>
+                            <li><strong>Whisperwillow:</strong> Trees that communicate through rustling leaves, used by druids for scrying.</li>
+                            <li><strong>Crystal Cacti:</strong> Desert plants that store water in crystalline formations.</li>
+                        </ul>
+                        
+                        <h3>Alchemical Resources</h3>
+                        <p>The Shattered Wastes contain mutated flora with potent alchemical properties, though harvesting them is dangerous due to reality distortions.</p>
+                    </div>
+                </div>
+                
+                <div class="lorebook" id="campaign-book">
+                    <div class="lorebook-cover">
+                        <div class="book-icon">
+                            <i class="fas fa-dungeon"></i>
+                        </div>
+                        <div class="book-title">Campaign Journal</div>
+                        <div class="book-subtitle">Adventures & Plot Hooks</div>
+                        <button class="open-book-btn">Open Tome</button>
+                    </div>
+                    <div class="lorebook-content">
+                        <button class="close-book-btn">×</button>
+                        <h3>Current Campaign Arcs</h3>
+                        <p><strong>The Crystal Conspiracy:</strong> A secret society is harvesting crystal energy to power an ancient device that could rewrite reality.</p>
+                        
+                        <p><strong>Forest's Fury:</strong> The Verdant Expanse is expanding unnaturally, consuming border towns. The forest spirits are agitated by an unknown disturbance.</p>
+                        
+                        <h3>NPCs of Note</h3>
+                        <ul>
+                            <li><strong>Archmage Valerius:</strong> Keeper of the Celestial Observatory, knows much about Aetheria's magical nature.</li>
+                            <li><strong>Chieftain Bronzebeard:</strong> Leader of the Crystal Peak dwarves, suspicious of outsiders.</li>
+                            <li><strong>Lady Seraphina:</strong> Ruler of the floating city in Azure Depths, seeks alliance against sea monsters.</li>
+                            <li><strong>The Sand Prophet:</strong> Mysterious seer of the Embersand Desert, gives cryptic prophecies.</li>
+                        </ul>
+                        
+                        <h3>Artifacts to Find</h3>
+                        <ul>
+                            <li><strong>The Heart of the Mountain:</strong> A massive crystal that stabilizes the Crystal Peaks region.</li>
+                            <li><strong>Titan's Sigil:</strong> A stone tablet containing forgotten elemental magic.</li>
+                            <li><strong>Leviathan's Pearl:</strong> A pearl that allows communication with sea creatures.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Planet Aetheria &copy; 2023 - For use in Dungeons & Dragons campaigns</p>
+            <p>Interactive 3D planet view created with Three.js | Click and drag to rotate, scroll to zoom</p>
+            <p style="margin-top: 10px; font-size: 0.8rem;"><i class="fas fa-magic"></i> This world is a canvas for your imagination. May your rolls be natural and your adventures legendary.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Three.js variables
+        let scene, camera, renderer, planet, clouds, grid, controls;
+        let isRotating = true;
+        let showGrid = false;
+        let showClouds = true;
+        let zoomLevel = 12;
+        let planetTexture = null;
+        let cloudTextures = [];
+        
+        // Region data for campaign notes
+        const regionData = {
+            crystal: {
+                name: "Crystal Peaks",
+                notes: "The Crystal Peaks are home to the reclusive Dwarven clans who mine the magical crystals that grow naturally within the mountains. These crystals can store and amplify magic, making them highly sought after by wizards and artificers across Aetheria. The peaks are constantly shifting due to tectonic activity influenced by the powerful magical leylines that converge here.",
+                hook: "The party is hired to escort a crystal shipment to the capital, but discovers the crystals are being used for a sinister purpose by a cult trying to awaken an ancient earth elemental trapped beneath the mountains."
+            },
+            verdant: {
+                name: "Verdant Expanse",
+                notes: "The Verdant Expanse is an ancient, sentient forest that has grown for millennia. The trees communicate through a fungal network and protect the hidden cities of the wood elves. Strange magical phenomena are common here, with flora that reacts to emotion and fauna that seems to understand language. The forest itself is said to remember everything that happens within its bounds.",
+                hook: "The forest has begun to encroach on nearby settlements at an unnatural rate. The party must discover why and negotiate with the forest's guardians before villages are consumed. They may find the forest is reacting to a blight that only outsiders can heal."
+            },
+            shattered: {
+                name: "Shattered Wastes",
+                notes: "A barren landscape where reality itself was torn apart in a magical war centuries ago. The laws of physics and magic behave unpredictably here, with floating debris, time distortions, and spatial anomalies. Strange creatures mutated by wild magic roam the wastes, and treasures from the fallen civilizations that caused the cataclysm are rumored to still be intact in protected pockets of reality.",
+                hook: "A powerful artifact was lost in the Shattered Wastes during the cataclysm. The party must navigate the dangerous terrain and reality-warping effects to retrieve it before a rival faction does. They'll need to solve spatial puzzles and avoid areas where magic behaves chaotically."
+            },
+            azure: {
+                name: "Azure Depths",
+                notes: "Vast oceans cover 65% of Aetheria's surface. Beneath the waves lie ancient ruins of fallen civilizations, merfolk cities, and dangerous sea creatures. Magical floating islands drift on ocean currents, some inhabited by reclusive monks or dangerous predators. The depths contain trenches that plunge into the elemental plane of water, creating portals that sometimes release elemental beings.",
+                hook: "Trade between surface and underwater kingdoms has halted after ships began disappearing. The party must investigate whether this is due to piracy, sea monsters, or political intrigue. They may need to forge an alliance with merfolk or tritons to solve the mystery."
+            },
+            embersand: {
+                name: "Embersand Desert",
+                notes: "A magical desert where the sands glow with residual arcane energy from fallen stars. Nomadic tribes travel the dunes, and ancient pyramids hide forgotten knowledge and powerful artifacts. The desert is home to unique creatures adapted to the magical environment, and sandstorms here can temporarily alter the flow of magic in the area. At night, the desert glows with ethereal light.",
+                hook: "A meteor has crash-landed in the deepest part of the desert, releasing strange magical energies. The party must race against rival treasure hunters and desert creatures to reach it first. The meteor may contain extraterrestrial minerals or even a dormant celestial being."
+            }
+        };
+        
+        // Initialize the 3D scene
+        function init() {
+            // Create scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a1a);
+            scene.fog = new THREE.Fog(0x0a0a1a, 20, 100);
+            
+            // Create camera
+            camera = new THREE.PerspectiveCamera(45, 
+                document.getElementById('planet-container').clientWidth / 
+                document.getElementById('planet-container').clientHeight, 
+                0.1, 1000);
+            camera.position.z = zoomLevel;
+            
+            // Create renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(
+                document.getElementById('planet-container').clientWidth,
+                document.getElementById('planet-container').clientHeight
+            );
+            renderer.shadowMap.enabled = true;
+            document.getElementById('planet-container').appendChild(renderer.domElement);
+            
+            // Add OrbitControls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.minDistance = 5;
+            controls.maxDistance = 30;
+            
+            // Add lights
+            const ambientLight = new THREE.AmbientLight(0x333333);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(10, 5, 10);
+            directionalLight.castShadow = true;
+            scene.add(directionalLight);
+            
+            // Add hemisphere light for natural sky illumination
+            const hemisphereLight = new THREE.HemisphereLight(0x87CEEB, 0x3A5F0B, 0.6);
+            scene.add(hemisphereLight);
+            
+            // Create the planet
+            createPlanet();
+            
+            // Create grid
+            createGrid();
+            
+            // Create realistic clouds
+            createRealisticClouds();
+            
+            // Add stars in the background
+            createStars();
+            
+            // Add event listeners
+            setupEventListeners();
+            
+            // Start animation
+            animate();
+        }
+        
+        // Create the planet with different biomes
+        function createPlanet() {
+            // Create planet sphere
+            const geometry = new THREE.SphereGeometry(3, 128, 128);
+            
+            // Create default texture
+            const canvas = document.createElement('canvas');
+            canvas.width = 2048;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            
+            // Draw biome map
+            drawBiomeMap(ctx);
+            
+            planetTexture = new THREE.CanvasTexture(canvas);
+            
+            const material = new THREE.MeshPhongMaterial({ 
+                map: planetTexture,
+                shininess: 10,
+                bumpScale: 0.05
+            });
+            
+            planet = new THREE.Mesh(geometry, material);
+            planet.castShadow = true;
+            planet.receiveShadow = true;
+            scene.add(planet);
+        }
+        
+        // Draw biome map on canvas
+        function drawBiomeMap(ctx) {
+            // Base color (oceans)
+            ctx.fillStyle = '#1a3a5f';
+            ctx.fillRect(0, 0, 2048, 1024);
+            
+            // Add ocean texture
+            ctx.fillStyle = '#2a4a6f';
+            for(let i = 0; i < 500; i++) {
+                const x = Math.random() * 2048;
+                const y = Math.random() * 1024;
+                const radius = Math.random() * 15 + 5;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Crystal Peaks (mountains)
+            ctx.fillStyle = '#8a7fcc';
+            drawLandMass(ctx, 400, 200, 300, 240, '#6a5fa8', true);
+            
+            // Verdant Expanse (forest)
+            ctx.fillStyle = '#2a7a3a';
+            drawLandMass(ctx, 1200, 300, 360, 260, '#1a5a2a', false);
+            
+            // Shattered Wastes (desolate)
+            ctx.fillStyle = '#7a6a5a';
+            drawLandMass(ctx, 800, 600, 320, 220, '#5a4a3a', true);
+            
+            // Embersand Desert (desert)
+            ctx.fillStyle = '#d4a460';
+            drawLandMass(ctx, 1600, 700, 280, 200, '#b48440', false);
+            
+            // Additional land masses
+            ctx.fillStyle = '#3a8a5a';
+            drawLandMass(ctx, 200, 700, 240, 180, '#2a6a3a', false);
+            
+            ctx.fillStyle = '#5a4a8a';
+            drawLandMass(ctx, 600, 800, 260, 190, '#4a3a6a', true);
+            
+            // Polar ice caps
+            ctx.fillStyle = '#e8f8f8';
+            ctx.fillRect(0, 0, 2048, 120);
+            ctx.fillRect(0, 904, 2048, 120);
+            
+            // Add texture to ice caps
+            ctx.fillStyle = '#d0e8e8';
+            for(let i = 0; i < 100; i++) {
+                const x = Math.random() * 2048;
+                const y = Math.random() * 120;
+                const radius = Math.random() * 10 + 3;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Helper to draw land masses
+        function drawLandMass(ctx, x, y, width, height, edgeColor, mountainous) {
+            // Create a rounded land mass
+            ctx.beginPath();
+            ctx.ellipse(x, y, width/2, height/2, 0, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Add some texture with dots
+            ctx.fillStyle = edgeColor;
+            for(let i = 0; i < (mountainous ? 60 : 30); i++) {
+                const dotX = x + (Math.random() - 0.5) * width * 0.8;
+                const dotY = y + (Math.random() - 0.5) * height * 0.8;
+                const radius = Math.random() * (mountainous ? 8 : 5) + 2;
+                
+                if (Math.pow((dotX - x) / (width/2), 2) + Math.pow((dotY - y) / (height/2), 2) <= 1) {
+                    ctx.beginPath();
+                    ctx.arc(dotX, dotY, radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            
+            // Add mountain peaks if mountainous
+            if (mountainous) {
+                ctx.fillStyle = '#9a8fdc';
+                for(let i = 0; i < 5; i++) {
+                    const peakX = x + (Math.random() - 0.5) * width * 0.5;
+                    const peakY = y + (Math.random() - 0.5) * height * 0.5;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(peakX, peakY - 15);
+                    ctx.lineTo(peakX - 8, peakY + 5);
+                    ctx.lineTo(peakX + 8, peakY + 5);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            }
+        }
+        
+        // Create realistic clouds with multiple layers
+        function createRealisticClouds() {
+            // Create multiple cloud layers for realism
+            const cloudGeometry = new THREE.SphereGeometry(3.15, 64, 64);
+            
+            // Create cloud texture with more detail
+            const cloudCanvas = document.createElement('canvas');
+            cloudCanvas.width = 1024;
+            cloudCanvas.height = 512;
+            const cloudCtx = cloudCanvas.getContext('2d');
+            
+            // Create detailed cloud pattern
+            cloudCtx.fillStyle = 'rgba(255, 255, 255, 0)';
+            cloudCtx.fillRect(0, 0, 1024, 512);
+            
+            // Draw cloud formations
+            cloudCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            
+            // Create multiple cloud clusters
+            const cloudClusters = [
+                {x: 200, y: 150, size: 80},
+                {x: 400, y: 300, size: 100},
+                {x: 700, y: 200, size: 120},
+                {x: 900, y: 350, size: 90},
+                {x: 300, y: 400, size: 70},
+                {x: 600, y: 100, size: 60}
+            ];
+            
+            cloudClusters.forEach(cluster => {
+                // Draw cloud puff
+                cloudCtx.beginPath();
+                for(let i = 0; i < 10; i++) {
+                    const angle = (i / 10) * Math.PI * 2;
+                    const radius = cluster.size * (0.7 + Math.random() * 0.3);
+                    const x = cluster.x + Math.cos(angle) * radius;
+                    const y = cluster.y + Math.sin(angle) * radius;
+                    
+                    if (i === 0) {
+                        cloudCtx.moveTo(x, y);
+                    } else {
+                        cloudCtx.lineTo(x, y);
+                    }
+                }
+                cloudCtx.closePath();
+                cloudCtx.fill();
+                
+                // Add some smaller puffs around
+                for(let i = 0; i < 5; i++) {
+                    const offsetX = (Math.random() - 0.5) * cluster.size * 1.5;
+                    const offsetY = (Math.random() - 0.5) * cluster.size * 1.5;
+                    const size = cluster.size * (0.3 + Math.random() * 0.3);
+                    
+                    cloudCtx.beginPath();
+                    cloudCtx.arc(cluster.x + offsetX, cluster.y + offsetY, size, 0, Math.PI * 2);
+                    cloudCtx.fill();
+                }
+            });
+            
+            const cloudTexture = new THREE.CanvasTexture(cloudCanvas);
+            cloudTexture.wrapS = THREE.RepeatWrapping;
+            cloudTexture.wrapT = THREE.RepeatWrapping;
+            cloudTexture.repeat.set(1, 1);
+            
+            const cloudMaterial = new THREE.MeshPhongMaterial({
+                map: cloudTexture,
+                transparent: true,
+                opacity: 0.8,
+                depthWrite: false
+            });
+            
+            clouds = new THREE.Mesh(cloudGeometry, cloudMaterial);
+            clouds.rotation.x = -0.2; // Tilt clouds slightly for realism
+            scene.add(clouds);
+            
+            // Add a second, faster moving cloud layer for depth
+            const cloudGeometry2 = new THREE.SphereGeometry(3.25, 64, 64);
+            const cloudMaterial2 = new THREE.MeshPhongMaterial({
+                map: cloudTexture,
+                transparent: true,
+                opacity: 0.5,
+                depthWrite: false
+            });
+            
+            const clouds2 = new THREE.Mesh(cloudGeometry2, cloudMaterial2);
+            clouds2.rotation.x = -0.1;
+            scene.add(clouds2);
+            
+            // Store for animation
+            cloudTextures.push(clouds);
+            cloudTextures.push(clouds2);
+        }
+        
+        // Create latitude/longitude grid
+        function createGrid() {
+            const gridGeometry = new THREE.SphereGeometry(3.05, 32, 32);
+            const gridMaterial = new THREE.MeshBasicMaterial({
+                color: 0x444444,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.3
+            });
+            
+            grid = new THREE.Mesh(gridGeometry, gridMaterial);
+            grid.visible = false;
+            scene.add(grid);
+        }
+        
+        // Create starfield background
+        function createStars() {
+            const starGeometry = new THREE.BufferGeometry();
+            const starCount = 8000;
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+            
+            for(let i = 0; i < starCount * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 3000;
+                positions[i+1] = (Math.random() - 0.5) * 3000;
+                positions[i+2] = (Math.random() - 0.5) * 3000;
+                
+                // Random star colors (mostly white/blue, some yellow/red)
+                const starColor = Math.random();
+                if (starColor > 0.9) {
+                    colors[i] = 1.0;   // Red
+                    colors[i+1] = 0.7; // Green
+                    colors[i+2] = 0.5; // Blue
+                } else if (starColor > 0.7) {
+                    colors[i] = 1.0;   // Red
+                    colors[i+1] = 1.0; // Green
+                    colors[i+2] = 0.8; // Blue
+                } else {
+                    colors[i] = 0.9;   // Red
+                    colors[i+1] = 0.9; // Green
+                    colors[i+2] = 1.0; // Blue
+                }
+            }
+            
+            starGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            starGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const starMaterial = new THREE.PointsMaterial({
+                size: 1.2,
+                vertexColors: true,
+                transparent: true
+            });
+            
+            const stars = new THREE.Points(starGeometry, starMaterial);
+            scene.add(stars);
+        }
+        
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate planet if auto-rotate is enabled
+            if (isRotating) {
+                planet.rotation.y += 0.002;
+                
+                // Rotate clouds at different speeds for realism
+                if (cloudTextures[0]) cloudTextures[0].rotation.y += 0.0025;
+                if (cloudTextures[1]) cloudTextures[1].rotation.y += 0.0035;
+                
+                // Rotate grid with planet
+                if (grid) grid.rotation.y += 0.002;
+            }
+            
+            // Update controls
+            controls.update();
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Control buttons
+            document.getElementById('rotate-btn').addEventListener('click', function() {
+                isRotating = !isRotating;
+                this.classList.toggle('active');
+                this.innerHTML = isRotating ? 
+                    '<i class="fas fa-sync-alt"></i> Auto-Rotate' : 
+                    '<i class="fas fa-pause"></i> Auto-Rotate';
+            });
+            
+            document.getElementById('grid-toggle').addEventListener('click', function() {
+                showGrid = !showGrid;
+                grid.visible = showGrid;
+                this.classList.toggle('active');
+                this.innerHTML = showGrid ? 
+                    '<i class="fas fa-th"></i> Hide Grid' : 
+                    '<i class="fas fa-th"></i> Show Grid';
+            });
+            
+            document.getElementById('cloud-toggle').addEventListener('click', function() {
+                showClouds = !showClouds;
+                cloudTextures.forEach(cloud => {
+                    cloud.visible = showClouds;
+                });
+                this.classList.toggle('active');
+                this.innerHTML = showClouds ? 
+                    '<i class="fas fa-cloud"></i> Hide Clouds' : 
+                    '<i class="fas fa-cloud"></i> Show Clouds';
+            });
+            
+            document.getElementById('zoom-in-btn').addEventListener('click', function() {
+                controls.dollyIn(0.5);
+            });
+            
+            document.getElementById('zoom-out-btn').addEventListener('click', function() {
+                controls.dollyOut(0.5);
+            });
+            
+            document.getElementById('reset-btn').addEventListener('click', function() {
+                controls.reset();
+            });
+            
+            // Texture upload
+            document.getElementById('texture-upload').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const fileName = document.getElementById('file-name');
+                fileName.textContent = file.name;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const texture = new THREE.TextureLoader().load(event.target.result, function() {
+                        // Update planet material with new texture
+                        planet.material.map = texture;
+                        planet.material.needsUpdate = true;
+                        
+                        // Show success message
+                        fileName.innerHTML = `<span style="color: var(--gold);">${file.name} loaded successfully!</span>`;
+                    });
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Region selection
+            document.querySelectorAll('.region-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all regions
+                    document.querySelectorAll('.region-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked region
+                    this.classList.add('active');
+                    
+                    // Update campaign notes
+                    const region = this.getAttribute('data-region');
+                    updateCampaignNotes(region);
+                });
+            });
+            
+            // Lorebook interactions
+            document.querySelectorAll('.lorebook').forEach(book => {
+                const openBtn = book.querySelector('.open-book-btn');
+                const closeBtn = book.querySelector('.close-book-btn');
+                
+                openBtn.addEventListener('click', function() {
+                    // Close any other open books
+                    document.querySelectorAll('.lorebook').forEach(b => {
+                        if (b !== book && b.classList.contains('open')) {
+                            b.classList.remove('open');
+                        }
+                    });
+                    
+                    // Open this book
+                    book.classList.add('open');
+                });
+                
+                closeBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    book.classList.remove('open');
+                });
+            });
+            
+            // Close book when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.lorebook')) {
+                    document.querySelectorAll('.lorebook').forEach(book => {
+                        book.classList.remove('open');
+                    });
+                }
+            });
+            
+            // Window resize handling
+            window.addEventListener('resize', function() {
+                const container = document.getElementById('planet-container');
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+        
+        // Update campaign notes based on selected region
+        function updateCampaignNotes(region) {
+            const data = regionData[region];
+            const notesSection = document.querySelector('.campaign-notes');
+            
+            notesSection.innerHTML = `
+                <h3><i class="fas fa-scroll"></i> Campaign Notes: ${data.name}</h3>
+                <p>${data.notes}</p>
+                <p><strong>Plot Hook:</strong> ${data.hook}</p>
+            `;
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
