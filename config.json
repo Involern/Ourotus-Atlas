@@ -26,7 +26,7 @@
   },
   "cache": {
     "autoSave": true,
-    "autoSaveInterval": 5000,
+    "autoSaveInterval": 3000,
     "dbName": "OurotusAtlasDB",
     "dbVersion": 2
   }

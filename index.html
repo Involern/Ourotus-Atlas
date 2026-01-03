@@ -5,28 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ourotus Atlas</title>
   
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  
-  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Markdown Parser -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   
-  <!-- Styles -->
   <link rel="stylesheet" href="src/css/main.css">
 </head>
 <body>
   <div class="app-container">
-    <!-- Header -->
     <header class="app-header">
       <div class="header-brand">
-        <div class="header-logo">
-          <i class="fas fa-globe-americas"></i>
-        </div>
+        <div class="header-logo"><i class="fas fa-globe-americas"></i></div>
         <div>
           <div class="header-title" id="world-title">Ourotus Atlas</div>
           <div class="header-subtitle" id="world-subtitle">World Builder</div>
@@ -39,76 +30,46 @@
           <span id="sync-text">Loading...</span>
         </div>
         
-        <div class="tabs">
-          <button class="tab active" data-tab="map">
-            <i class="fas fa-map"></i> Map
-          </button>
-          <button class="tab" data-tab="lorebook">
-            <i class="fas fa-book"></i> Lorebook
-          </button>
+        <div class="header-tabs">
+          <button class="tab active" data-tab="map"><i class="fas fa-map"></i> Map</button>
+          <button class="tab" data-tab="lorebook"><i class="fas fa-book"></i> Lorebook</button>
         </div>
         
-        <button class="btn btn-ghost btn-icon" id="btn-save" title="Save to browser">
-          <i class="fas fa-save"></i>
-        </button>
-        <button class="btn btn-ghost btn-icon" id="btn-export" title="Export data">
-          <i class="fas fa-download"></i>
-        </button>
-        <button class="btn btn-ghost btn-icon" id="btn-import" title="Import data">
-          <i class="fas fa-upload"></i>
-        </button>
-        <button class="btn btn-ghost btn-icon" id="btn-reset" title="Reset to defaults">
-          <i class="fas fa-undo"></i>
-        </button>
+        <button class="btn btn-ghost btn-icon" id="btn-save" title="Save"><i class="fas fa-save"></i></button>
+        <button class="btn btn-ghost btn-icon" id="btn-export" title="Export"><i class="fas fa-download"></i></button>
+        <button class="btn btn-ghost btn-icon" id="btn-import" title="Import"><i class="fas fa-upload"></i></button>
+        <button class="btn btn-ghost btn-icon" id="btn-reset" title="Reset"><i class="fas fa-undo"></i></button>
         <input type="file" id="import-input" accept=".json" class="hidden">
       </div>
     </header>
     
-    <!-- Main Content -->
-    <main class="app-main">
+    <main>
       <!-- Map View -->
       <div id="map-panel" class="map-view">
-        <!-- Hex Map -->
         <div class="hexmap-wrapper">
           <div id="hexmap-container" class="hexmap-container"></div>
-          
           <div class="hexmap-controls">
-            <button class="btn btn-ghost btn-icon-sm" id="btn-zoom-in" title="Zoom in">
-              <i class="fas fa-plus"></i>
-            </button>
-            <button class="btn btn-ghost btn-icon-sm" id="btn-zoom-out" title="Zoom out">
-              <i class="fas fa-minus"></i>
-            </button>
-            <button class="btn btn-ghost btn-icon-sm" id="btn-reset-view" title="Reset view">
-              <i class="fas fa-crosshairs"></i>
-            </button>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-zoom-in" title="Zoom in"><i class="fas fa-plus"></i></button>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-zoom-out" title="Zoom out"><i class="fas fa-minus"></i></button>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-reset-view" title="Reset view"><i class="fas fa-crosshairs"></i></button>
           </div>
-          
-          <div class="hexmap-info" id="hexmap-info">
-            Click a hex to edit
-          </div>
+          <div class="hexmap-info">Click a hex to edit</div>
         </div>
         
-        <!-- Hex Details Sidebar -->
         <aside class="hex-sidebar">
           <div class="panel-header">
             <span class="panel-title">Hex Details</span>
           </div>
-          
           <div class="panel-content" id="hex-details">
             <div class="empty-state">
-              <i class="fas fa-hexagon-image empty-state-icon"></i>
-              <p class="empty-state-text">Select a hex on the map</p>
+              <i class="fas fa-hexagon empty-state-icon"></i>
+              <p class="empty-state-text">Select a hex</p>
             </div>
           </div>
-          
           <div class="panel-header mt-md">
             <span class="panel-title">Biomes</span>
-            <button class="btn btn-ghost btn-icon-sm" id="btn-add-biome" title="Add biome">
-              <i class="fas fa-plus"></i>
-            </button>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-add-biome" title="Add biome"><i class="fas fa-plus"></i></button>
           </div>
-          
           <div class="panel-content">
             <ul class="biome-list" id="biome-list"></ul>
           </div>
@@ -117,55 +78,38 @@
       
       <!-- Lorebook View -->
       <div id="lorebook-panel" class="lorebook-view hidden">
-        <!-- Notebooks Panel -->
-        <aside class="panel notebooks-panel">
+        <aside class="panel">
           <div class="panel-header">
             <span class="panel-title">Notebooks</span>
-            <button class="btn btn-ghost btn-icon-sm" id="btn-add-notebook" title="Add notebook">
-              <i class="fas fa-plus"></i>
-            </button>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-add-notebook" title="Add notebook"><i class="fas fa-plus"></i></button>
           </div>
           <div class="panel-content">
             <ul class="notebook-list" id="notebook-list"></ul>
           </div>
         </aside>
         
-        <!-- Pages Panel -->
         <aside class="panel pages-panel">
           <div class="panel-header">
             <span class="panel-title" id="section-title">Pages</span>
-            <button class="btn btn-ghost btn-icon-sm" id="btn-add-page" title="Add page">
-              <i class="fas fa-plus"></i>
-            </button>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-add-page" title="Add page"><i class="fas fa-plus"></i></button>
           </div>
           <div class="panel-content">
             <ul class="page-list" id="page-list"></ul>
           </div>
         </aside>
         
-        <!-- Editor Panel -->
         <div class="editor-panel" id="editor-panel">
           <div class="editor-header">
             <input type="text" id="page-title" class="editor-title-input" placeholder="Page Title">
             <div class="flex gap-sm">
-              <button class="btn btn-ghost btn-sm active" id="btn-edit-mode">
-                <i class="fas fa-edit"></i> Edit
-              </button>
-              <button class="btn btn-ghost btn-sm" id="btn-preview-mode">
-                <i class="fas fa-eye"></i> Preview
-              </button>
-              <button class="btn btn-ghost btn-sm text-danger" id="btn-delete-page" title="Delete page">
-                <i class="fas fa-trash"></i>
-              </button>
+              <button class="btn btn-ghost btn-sm active" id="btn-edit-mode"><i class="fas fa-edit"></i> Edit</button>
+              <button class="btn btn-ghost btn-sm" id="btn-preview-mode"><i class="fas fa-eye"></i> Preview</button>
+              <button class="btn btn-ghost btn-sm text-danger" id="btn-delete-page"><i class="fas fa-trash"></i></button>
             </div>
           </div>
           <div class="editor-content">
-            <div id="edit-view">
-              <textarea id="page-content" class="editor-textarea" placeholder="Write your content here... (Markdown supported)"></textarea>
-            </div>
-            <div id="preview-view" class="hidden">
-              <div id="preview-content" class="preview-content"></div>
-            </div>
+            <div id="edit-view"><textarea id="page-content" class="editor-textarea" placeholder="Write content here... (Markdown supported)"></textarea></div>
+            <div id="preview-view" class="hidden"><div id="preview-content" class="preview-content"></div></div>
           </div>
         </div>
       </div>
@@ -173,15 +117,11 @@
   </div>
   
   <!-- Modals -->
-  
-  <!-- Notebook Modal -->
   <div class="modal-overlay" id="notebook-modal">
     <div class="modal">
       <div class="modal-header">
         <h3 class="modal-title" id="notebook-modal-title">New Notebook</h3>
-        <button class="btn btn-ghost btn-icon-sm" data-close-modal>
-          <i class="fas fa-times"></i>
-        </button>
+        <button class="btn btn-ghost btn-icon-sm" data-close-modal><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="notebook-id">
@@ -190,7 +130,7 @@
           <input type="text" id="notebook-name" class="input" placeholder="Notebook name">
         </div>
         <div class="input-group mt-md">
-          <label class="input-label">Icon (FontAwesome class)</label>
+          <label class="input-label">Icon</label>
           <input type="text" id="notebook-icon" class="input" placeholder="fas fa-book" value="fas fa-book">
         </div>
         <div class="input-group mt-md">
@@ -199,25 +139,18 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger hidden" id="btn-delete-notebook">
-          <i class="fas fa-trash"></i> Delete
-        </button>
+        <button class="btn btn-danger hidden" id="btn-delete-notebook"><i class="fas fa-trash"></i> Delete</button>
         <button class="btn btn-secondary" data-close-modal>Cancel</button>
-        <button class="btn btn-primary" id="btn-save-notebook">
-          <i class="fas fa-check"></i> Save
-        </button>
+        <button class="btn btn-primary" id="btn-save-notebook"><i class="fas fa-check"></i> Save</button>
       </div>
     </div>
   </div>
   
-  <!-- Section Modal -->
   <div class="modal-overlay" id="section-modal">
     <div class="modal">
       <div class="modal-header">
         <h3 class="modal-title" id="section-modal-title">New Section</h3>
-        <button class="btn btn-ghost btn-icon-sm" data-close-modal>
-          <i class="fas fa-times"></i>
-        </button>
+        <button class="btn btn-ghost btn-icon-sm" data-close-modal><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="section-id">
@@ -232,25 +165,18 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger hidden" id="btn-delete-section">
-          <i class="fas fa-trash"></i> Delete
-        </button>
+        <button class="btn btn-danger hidden" id="btn-delete-section"><i class="fas fa-trash"></i> Delete</button>
         <button class="btn btn-secondary" data-close-modal>Cancel</button>
-        <button class="btn btn-primary" id="btn-save-section">
-          <i class="fas fa-check"></i> Save
-        </button>
+        <button class="btn btn-primary" id="btn-save-section"><i class="fas fa-check"></i> Save</button>
       </div>
     </div>
   </div>
   
-  <!-- Biome Modal -->
   <div class="modal-overlay" id="biome-modal">
     <div class="modal">
       <div class="modal-header">
         <h3 class="modal-title" id="biome-modal-title">New Biome</h3>
-        <button class="btn btn-ghost btn-icon-sm" data-close-modal>
-          <i class="fas fa-times"></i>
-        </button>
+        <button class="btn btn-ghost btn-icon-sm" data-close-modal><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body">
         <input type="hidden" id="biome-id">
@@ -268,21 +194,15 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-danger hidden" id="btn-delete-biome">
-          <i class="fas fa-trash"></i> Delete
-        </button>
+        <button class="btn btn-danger hidden" id="btn-delete-biome"><i class="fas fa-trash"></i> Delete</button>
         <button class="btn btn-secondary" data-close-modal>Cancel</button>
-        <button class="btn btn-primary" id="btn-save-biome">
-          <i class="fas fa-check"></i> Save
-        </button>
+        <button class="btn btn-primary" id="btn-save-biome"><i class="fas fa-check"></i> Save</button>
       </div>
     </div>
   </div>
   
-  <!-- Toast Container -->
   <div class="toast-container" id="toast-container"></div>
   
-  <!-- Scripts -->
   <script src="src/js/db.js"></script>
   <script src="src/js/hexmap.js"></script>
   <script src="src/js/app.js"></script>
