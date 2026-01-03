@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ocean",
+    "name": "Ocean",
+    "color": "#1a4c7c",
+    "pattern": "waves",
+    "temperature": "temperate",
+    "humidity": "wet",
+    "elevation": -2,
+    "description": "Deep waters teeming with aquatic life and ancient ruins.",
+    "encounters": ["sea serpent", "merfolk", "ghost ship"],
+    "resources": ["fish", "pearls", "coral"]
+  },
+  {
+    "id": "coast",
+    "name": "Coastal Waters",
+    "color": "#2d7eb5",
+    "pattern": "dots",
+    "temperature": "temperate",
+    "humidity": "wet",
+    "elevation": -1,
+    "description": "Shallow waters near land, dotted with islands and reefs.",
+    "encounters": ["pirates", "sea hags", "sahuagin"],
+    "resources": ["shellfish", "salt", "driftwood"]
+  },
+  {
+    "id": "plains",
+    "name": "Plains",
+    "color": "#7cb342",
+    "pattern": "solid",
+    "temperature": "temperate",
+    "humidity": "moderate",
+    "elevation": 1,
+    "description": "Rolling grasslands stretching to the horizon.",
+    "encounters": ["bandits", "centaurs", "wild horses"],
+    "resources": ["grain", "livestock", "herbs"]
+  },
+  {
+    "id": "forest",
+    "name": "Forest",
+    "color": "#2e5a1c",
+    "pattern": "trees",
+    "temperature": "temperate",
+    "humidity": "moderate",
+    "elevation": 1,
+    "description": "Dense woodlands hiding ancient secrets.",
+    "encounters": ["wolves", "dryads", "owlbears"],
+    "resources": ["timber", "game", "mushrooms"]
+  },
+  {
+    "id": "mountain",
+    "name": "Mountains",
+    "color": "#6b6b6b",
+    "pattern": "peaks",
+    "temperature": "cold",
+    "humidity": "dry",
+    "elevation": 4,
+    "description": "Towering peaks that pierce the clouds.",
+    "encounters": ["giants", "dragons", "griffons"],
+    "resources": ["ore", "gems", "stone"]
+  },
+  {
+    "id": "desert",
+    "name": "Desert",
+    "color": "#d4a84b",
+    "pattern": "dunes",
+    "temperature": "hot",
+    "humidity": "arid",
+    "elevation": 1,
+    "description": "Endless sands hiding buried civilizations.",
+    "encounters": ["mummies", "blue dragons", "gnolls"],
+    "resources": ["glass", "spices", "artifacts"]
+  },
+  {
+    "id": "tundra",
+    "name": "Tundra",
+    "color": "#a8c8d8",
+    "pattern": "snow",
+    "temperature": "frozen",
+    "humidity": "dry",
+    "elevation": 2,
+    "description": "Frozen wasteland where only the hardy survive.",
+    "encounters": ["frost giants", "winter wolves", "yetis"],
+    "resources": ["furs", "ice", "mammoth ivory"]
+  },
+  {
+    "id": "swamp",
+    "name": "Swamp",
+    "color": "#4a5d23",
+    "pattern": "marsh",
+    "temperature": "warm",
+    "humidity": "saturated",
+    "elevation": 0,
+    "description": "Murky wetlands filled with danger and decay.",
+    "encounters": ["lizardfolk", "black dragons", "will-o-wisps"],
+    "resources": ["peat", "rare herbs", "leeches"]
+  },
+  {
+    "id": "volcanic",
+    "name": "Volcanic",
+    "color": "#8b2500",
+    "pattern": "lava",
+    "temperature": "extreme",
+    "humidity": "dry",
+    "elevation": 3,
+    "description": "Scorched earth where fire elementals dwell.",
+    "encounters": ["fire elementals", "salamanders", "red dragons"],
+    "resources": ["obsidian", "sulfur", "fire gems"]
+  },
+  {
+    "id": "crystal",
+    "name": "Crystal Fields",
+    "color": "#9b59b6",
+    "pattern": "crystals",
+    "temperature": "magical",
+    "humidity": "arcane",
+    "elevation": 2,
+    "description": "Mystical lands where raw magic has crystallized.",
+    "encounters": ["elementals", "arcane constructs", "sorcerers"],
+    "resources": ["arcane crystals", "mana shards", "enchanted dust"]
+  }
+]

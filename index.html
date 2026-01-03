@@ -1,325 +1,290 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ourotus Atlas - D&D World Builder</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Cinzel:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ourotus Atlas</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Markdown Parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="src/css/main.css">
 </head>
 <body>
-    <!-- Data Status Indicator -->
-    <div id="data-status" class="data-status">
-        <div class="status-indicator" id="status-indicator">
-            <i class="fas fa-circle"></i>
-            <span id="status-text">Synced</span>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="header-logo">
+          <i class="fas fa-globe-americas"></i>
         </div>
-        <div class="status-actions">
-            <button class="status-btn" id="save-cache-btn" title="Save to browser cache">
-                <i class="fas fa-save"></i>
+        <div>
+          <div class="header-title" id="world-title">Ourotus Atlas</div>
+          <div class="header-subtitle" id="world-subtitle">World Builder</div>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <div class="sync-status" id="sync-status">
+          <span class="status-dot"></span>
+          <span id="sync-text">Loading...</span>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab active" data-tab="map">
+            <i class="fas fa-map"></i> Map
+          </button>
+          <button class="tab" data-tab="lorebook">
+            <i class="fas fa-book"></i> Lorebook
+          </button>
+        </div>
+        
+        <button class="btn btn-ghost btn-icon" id="btn-save" title="Save to browser">
+          <i class="fas fa-save"></i>
+        </button>
+        <button class="btn btn-ghost btn-icon" id="btn-export" title="Export data">
+          <i class="fas fa-download"></i>
+        </button>
+        <button class="btn btn-ghost btn-icon" id="btn-import" title="Import data">
+          <i class="fas fa-upload"></i>
+        </button>
+        <button class="btn btn-ghost btn-icon" id="btn-reset" title="Reset to defaults">
+          <i class="fas fa-undo"></i>
+        </button>
+        <input type="file" id="import-input" accept=".json" class="hidden">
+      </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Map View -->
+      <div id="map-panel" class="map-view">
+        <!-- Hex Map -->
+        <div class="hexmap-wrapper">
+          <div id="hexmap-container" class="hexmap-container"></div>
+          
+          <div class="hexmap-controls">
+            <button class="btn btn-ghost btn-icon-sm" id="btn-zoom-in" title="Zoom in">
+              <i class="fas fa-plus"></i>
             </button>
-            <button class="status-btn" id="download-data-btn" title="Download DATA.json">
-                <i class="fas fa-download"></i>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-zoom-out" title="Zoom out">
+              <i class="fas fa-minus"></i>
             </button>
-            <label class="status-btn" title="Upload DATA.json">
-                <i class="fas fa-upload"></i>
-                <input type="file" id="upload-data-input" accept=".json" hidden>
-            </label>
-            <button class="status-btn" id="reset-data-btn" title="Reset to defaults">
-                <i class="fas fa-undo"></i>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-reset-view" title="Reset view">
+              <i class="fas fa-crosshairs"></i>
             </button>
+          </div>
+          
+          <div class="hexmap-info" id="hexmap-info">
+            Click a hex to edit
+          </div>
         </div>
-    </div>
-
-    <!-- Main Container -->
-    <div class="app-container">
-        <!-- Header -->
-        <header class="main-header">
-            <div class="header-ornament left"></div>
-            <div class="header-content">
-                <h1 class="main-title" id="world-title">Ourotus Atlas</h1>
-                <p class="subtitle" id="world-subtitle">A realm of infinite possibilities</p>
+        
+        <!-- Hex Details Sidebar -->
+        <aside class="hex-sidebar">
+          <div class="panel-header">
+            <span class="panel-title">Hex Details</span>
+          </div>
+          
+          <div class="panel-content" id="hex-details">
+            <div class="empty-state">
+              <i class="fas fa-hexagon-image empty-state-icon"></i>
+              <p class="empty-state-text">Select a hex on the map</p>
             </div>
-            <div class="header-ornament right"></div>
-        </header>
-
-        <!-- Main Grid Layout -->
-        <main class="main-grid">
-            <!-- Celestial Observer Panel -->
-            <section class="celestial-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-globe"></i> Celestial Observer</h2>
-                    <div class="panel-controls">
-                        <button class="icon-btn" id="add-celestial-btn" title="Add Celestial Body">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="icon-btn" id="celestial-settings-btn" title="Settings">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 3D Viewport -->
-                <div class="viewport-container">
-                    <div id="celestial-viewport"></div>
-                    <div class="viewport-overlay">
-                        <div class="celestial-selector" id="celestial-selector">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Celestial Controls -->
-                <div class="celestial-controls">
-                    <div class="control-group">
-                        <button class="ctrl-btn active" id="rotate-toggle">
-                            <i class="fas fa-sync-alt"></i>
-                            <span>Rotate</span>
-                        </button>
-                        <button class="ctrl-btn" id="grid-toggle">
-                            <i class="fas fa-border-all"></i>
-                            <span>Grid</span>
-                        </button>
-                        <button class="ctrl-btn active" id="clouds-toggle">
-                            <i class="fas fa-cloud"></i>
-                            <span>Atmosphere</span>
-                        </button>
-                        <button class="ctrl-btn" id="labels-toggle">
-                            <i class="fas fa-tag"></i>
-                            <span>Labels</span>
-                        </button>
-                    </div>
-                    <div class="control-group">
-                        <button class="ctrl-btn" id="zoom-in">
-                            <i class="fas fa-search-plus"></i>
-                        </button>
-                        <button class="ctrl-btn" id="zoom-out">
-                            <i class="fas fa-search-minus"></i>
-                        </button>
-                        <button class="ctrl-btn" id="reset-view">
-                            <i class="fas fa-crosshairs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Celestial Stats -->
-                <div class="celestial-stats" id="celestial-stats">
-                    <!-- Populated by JS -->
-                </div>
-
-                <!-- Texture Upload -->
-                <div class="texture-upload">
-                    <label class="upload-area" id="texture-drop-zone">
-                        <i class="fas fa-image"></i>
-                        <span>Drop texture or click to upload</span>
-                        <input type="file" id="texture-upload" accept="image/*" hidden>
-                    </label>
-                </div>
-            </section>
-
-            <!-- Lorebooks Panel -->
-            <section class="lorebooks-panel">
-                <div class="panel-header">
-                    <h2><i class="fas fa-book-open"></i> Lorebooks</h2>
-                    <div class="panel-controls">
-                        <button class="icon-btn" id="add-lorebook-btn" title="Add Lorebook">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <div class="search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="lorebook-search" placeholder="Search lore...">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="lorebooks-grid" id="lorebooks-container">
-                    <!-- Populated by JS -->
-                </div>
-            </section>
-        </main>
-
-        <!-- Footer -->
-        <footer class="main-footer">
-            <p>Ourotus Atlas &copy; 2024 | Built for Dungeon Masters</p>
-            <p class="footer-hint">All data is cached locally. Export regularly to preserve your work.</p>
-        </footer>
-    </div>
-
-    <!-- Modals -->
-    <!-- Lorebook Editor Modal -->
-    <div class="modal-overlay" id="lorebook-modal">
-        <div class="modal lorebook-editor">
-            <div class="modal-header">
-                <h3 id="lorebook-modal-title">Edit Lorebook</h3>
-                <button class="close-modal" data-modal="lorebook-modal">
-                    <i class="fas fa-times"></i>
-                </button>
+          </div>
+          
+          <div class="panel-header mt-md">
+            <span class="panel-title">Biomes</span>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-add-biome" title="Add biome">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          
+          <div class="panel-content">
+            <ul class="biome-list" id="biome-list"></ul>
+          </div>
+        </aside>
+      </div>
+      
+      <!-- Lorebook View -->
+      <div id="lorebook-panel" class="lorebook-view hidden">
+        <!-- Notebooks Panel -->
+        <aside class="panel notebooks-panel">
+          <div class="panel-header">
+            <span class="panel-title">Notebooks</span>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-add-notebook" title="Add notebook">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          <div class="panel-content">
+            <ul class="notebook-list" id="notebook-list"></ul>
+          </div>
+        </aside>
+        
+        <!-- Pages Panel -->
+        <aside class="panel pages-panel">
+          <div class="panel-header">
+            <span class="panel-title" id="section-title">Pages</span>
+            <button class="btn btn-ghost btn-icon-sm" id="btn-add-page" title="Add page">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          <div class="panel-content">
+            <ul class="page-list" id="page-list"></ul>
+          </div>
+        </aside>
+        
+        <!-- Editor Panel -->
+        <div class="editor-panel" id="editor-panel">
+          <div class="editor-header">
+            <input type="text" id="page-title" class="editor-title-input" placeholder="Page Title">
+            <div class="flex gap-sm">
+              <button class="btn btn-ghost btn-sm active" id="btn-edit-mode">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-ghost btn-sm" id="btn-preview-mode">
+                <i class="fas fa-eye"></i> Preview
+              </button>
+              <button class="btn btn-ghost btn-sm text-danger" id="btn-delete-page" title="Delete page">
+                <i class="fas fa-trash"></i>
+              </button>
             </div>
-            <div class="modal-body">
-                <input type="hidden" id="lorebook-edit-id">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" id="lorebook-title" placeholder="Chronicles of...">
-                </div>
-                <div class="form-group">
-                    <label>Subtitle</label>
-                    <input type="text" id="lorebook-subtitle" placeholder="History & Mythology">
-                </div>
-                <div class="form-group">
-                    <label>Icon (FontAwesome class)</label>
-                    <div class="icon-picker">
-                        <input type="text" id="lorebook-icon" placeholder="fas fa-landmark">
-                        <div class="icon-preview" id="lorebook-icon-preview">
-                            <i class="fas fa-landmark"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Cover Color</label>
-                    <input type="color" id="lorebook-color" value="#8b4513">
-                </div>
-                <div class="form-group">
-                    <label>Content (Markdown supported)</label>
-                    <textarea id="lorebook-content" rows="12" placeholder="### Chapter Title
-
-Write your lore here..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Tags (comma separated)</label>
-                    <input type="text" id="lorebook-tags" placeholder="history, mythology, ancient">
-                </div>
+          </div>
+          <div class="editor-content">
+            <div id="edit-view">
+              <textarea id="page-content" class="editor-textarea" placeholder="Write your content here... (Markdown supported)"></textarea>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" id="delete-lorebook-btn">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-                <button class="btn btn-secondary" data-modal="lorebook-modal">Cancel</button>
-                <button class="btn btn-primary" id="save-lorebook-btn">
-                    <i class="fas fa-save"></i> Save
-                </button>
+            <div id="preview-view" class="hidden">
+              <div id="preview-content" class="preview-content"></div>
             </div>
+          </div>
         </div>
-    </div>
-
-    <!-- Celestial Body Editor Modal -->
-    <div class="modal-overlay" id="celestial-modal">
-        <div class="modal celestial-editor">
-            <div class="modal-header">
-                <h3 id="celestial-modal-title">Edit Celestial Body</h3>
-                <button class="close-modal" data-modal="celestial-modal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="celestial-edit-id">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="celestial-name" placeholder="Planet Aetheria">
-                    </div>
-                    <div class="form-group">
-                        <label>Type</label>
-                        <select id="celestial-type">
-                            <option value="planet">Planet</option>
-                            <option value="moon">Moon</option>
-                            <option value="star">Star</option>
-                            <option value="asteroid">Asteroid</option>
-                            <option value="gas-giant">Gas Giant</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Radius</label>
-                        <input type="number" id="celestial-radius" value="3" min="0.5" max="20" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label>Rotation Speed</label>
-                        <input type="number" id="celestial-rotation" value="0.002" min="0" max="0.1" step="0.001">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Description</label>
-                    <textarea id="celestial-description" rows="3" placeholder="A mystical world..."></textarea>
-                </div>
-                
-                <h4 class="form-section-title">Appearance</h4>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Primary Color</label>
-                        <input type="color" id="celestial-color1" value="#1a3a5f">
-                    </div>
-                    <div class="form-group">
-                        <label>Secondary Color</label>
-                        <input type="color" id="celestial-color2" value="#2a7a3a">
-                    </div>
-                    <div class="form-group">
-                        <label>Accent Color</label>
-                        <input type="color" id="celestial-color3" value="#d4a460">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Has Atmosphere</label>
-                    <input type="checkbox" id="celestial-atmosphere" checked>
-                </div>
-                <div class="form-group atmosphere-options">
-                    <label>Atmosphere Color</label>
-                    <input type="color" id="celestial-atmo-color" value="#ffffff">
-                </div>
-                
-                <h4 class="form-section-title">Statistics</h4>
-                <div id="celestial-stats-editor">
-                    <!-- Dynamic stats -->
-                </div>
-                <button class="btn btn-small" id="add-stat-btn">
-                    <i class="fas fa-plus"></i> Add Stat
-                </button>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-danger" id="delete-celestial-btn">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-                <button class="btn btn-secondary" data-modal="celestial-modal">Cancel</button>
-                <button class="btn btn-primary" id="save-celestial-btn">
-                    <i class="fas fa-save"></i> Save
-                </button>
-            </div>
+      </div>
+    </main>
+  </div>
+  
+  <!-- Modals -->
+  
+  <!-- Notebook Modal -->
+  <div class="modal-overlay" id="notebook-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="notebook-modal-title">New Notebook</h3>
+        <button class="btn btn-ghost btn-icon-sm" data-close-modal>
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="notebook-id">
+        <div class="input-group">
+          <label class="input-label">Name</label>
+          <input type="text" id="notebook-name" class="input" placeholder="Notebook name">
         </div>
-    </div>
-
-    <!-- Lorebook Viewer Modal -->
-    <div class="modal-overlay" id="lorebook-viewer-modal">
-        <div class="modal lorebook-viewer">
-            <div class="modal-header viewer-header">
-                <div class="viewer-title">
-                    <i class="fas fa-book" id="viewer-icon"></i>
-                    <h3 id="viewer-title">Lorebook</h3>
-                </div>
-                <div class="viewer-actions">
-                    <button class="icon-btn" id="edit-current-lorebook" title="Edit">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="close-modal" data-modal="lorebook-viewer-modal">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="modal-body viewer-body" id="viewer-content">
-                <!-- Content rendered here -->
-            </div>
+        <div class="input-group mt-md">
+          <label class="input-label">Icon (FontAwesome class)</label>
+          <input type="text" id="notebook-icon" class="input" placeholder="fas fa-book" value="fas fa-book">
         </div>
+        <div class="input-group mt-md">
+          <label class="input-label">Color</label>
+          <input type="color" id="notebook-color" class="color-input" value="#6366f1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger hidden" id="btn-delete-notebook">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button class="btn btn-primary" id="btn-save-notebook">
+          <i class="fas fa-check"></i> Save
+        </button>
+      </div>
     </div>
-
-    <!-- Toast Notifications -->
-    <div class="toast-container" id="toast-container"></div>
-
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="data.js"></script>
-    <script src="celestial.js"></script>
-    <script src="app.js"></script>
+  </div>
+  
+  <!-- Section Modal -->
+  <div class="modal-overlay" id="section-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="section-modal-title">New Section</h3>
+        <button class="btn btn-ghost btn-icon-sm" data-close-modal>
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="section-id">
+        <input type="hidden" id="section-notebook-id">
+        <div class="input-group">
+          <label class="input-label">Name</label>
+          <input type="text" id="section-name" class="input" placeholder="Section name">
+        </div>
+        <div class="input-group mt-md">
+          <label class="input-label">Color</label>
+          <input type="color" id="section-color" class="color-input" value="#6366f1">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger hidden" id="btn-delete-section">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button class="btn btn-primary" id="btn-save-section">
+          <i class="fas fa-check"></i> Save
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Biome Modal -->
+  <div class="modal-overlay" id="biome-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="biome-modal-title">New Biome</h3>
+        <button class="btn btn-ghost btn-icon-sm" data-close-modal>
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="biome-id">
+        <div class="input-group">
+          <label class="input-label">Name</label>
+          <input type="text" id="biome-name" class="input" placeholder="Biome name">
+        </div>
+        <div class="input-group mt-md">
+          <label class="input-label">Color</label>
+          <input type="color" id="biome-color" class="color-input" value="#808080">
+        </div>
+        <div class="input-group mt-md">
+          <label class="input-label">Description</label>
+          <textarea id="biome-description" class="input" rows="3" placeholder="Describe this biome..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-danger hidden" id="btn-delete-biome">
+          <i class="fas fa-trash"></i> Delete
+        </button>
+        <button class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button class="btn btn-primary" id="btn-save-biome">
+          <i class="fas fa-check"></i> Save
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+  
+  <!-- Scripts -->
+  <script src="src/js/db.js"></script>
+  <script src="src/js/hexmap.js"></script>
+  <script src="src/js/app.js"></script>
 </body>
 </html>

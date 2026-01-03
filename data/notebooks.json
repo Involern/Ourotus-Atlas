@@ -1,0 +1,38 @@
+[
+  {
+    "id": "nb_001",
+    "name": "World Lore",
+    "color": "#8b4513",
+    "icon": "fas fa-globe",
+    "sortOrder": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "nb_002",
+    "name": "Bestiary",
+    "color": "#2e5a1c",
+    "icon": "fas fa-paw",
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "nb_003",
+    "name": "Campaign Notes",
+    "color": "#6b1c1c",
+    "icon": "fas fa-scroll",
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "nb_004",
+    "name": "Characters & NPCs",
+    "color": "#1c4a6b",
+    "icon": "fas fa-users",
+    "sortOrder": 3,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "app": {
+    "name": "Ourotus Atlas",
+    "version": "2.0.0",
+    "theme": "dark"
+  },
+  "hexmap": {
+    "defaultZoom": 1,
+    "hexSize": 30,
+    "showCoordinates": false,
+    "showGrid": true
+  },
+  "lorebook": {
+    "autosaveDelay": 2000,
+    "defaultFontSize": 16
+  },
+  "audio": {
+    "enabled": true,
+    "volume": 0.5,
+    "sounds": {
+      "click": "assets/audio/click.mp3",
+      "open": "assets/audio/open.mp3",
+      "save": "assets/audio/save.mp3",
+      "delete": "assets/audio/delete.mp3"
+    }
+  },
+  "cache": {
+    "autoSave": true,
+    "autoSaveInterval": 5000,
+    "dbName": "OurotusAtlasDB",
+    "dbVersion": 2
+  }
+}

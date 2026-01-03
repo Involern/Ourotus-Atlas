@@ -1,0 +1,65 @@
+[
+  {
+    "id": "pg_001",
+    "sectionId": "sec_001",
+    "title": "The Age of Titans",
+    "content": "# The Age of Titans\n\nBefore mortals walked the world, the **Primordial Titans** shaped reality itself.\n\n## The Five Titans\n\n- **Terros** - Titan of Earth and Stone\n- **Aqualis** - Titan of Seas and Rivers\n- **Pyronax** - Titan of Fire and Forge\n- **Zephyros** - Titan of Wind and Sky\n- **Umbral** - Titan of Shadow and Night\n\n## The Shaping\n\nFor millennia, the titans shaped the world, their conflicts creating mountains and carving oceans. The magical leylines that crisscross Aetheria are scars from their battles.\n\n## The Slumber\n\nEventually, exhausted from their eternal conflicts, the titans entered a deep slumber. Their sleeping forms became the great landmarks of the world.",
+    "sortOrder": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "pg_002",
+    "sectionId": "sec_001",
+    "title": "The Mortal Dawn",
+    "content": "# The Mortal Dawn\n\nAs the titans slept, new life emerged from the residual magic.\n\n## First Races\n\n### Elves\nBorn from starlight and dreams, the elves were the first to develop civilization.\n\n### Dwarves\nForged from the dreams of Terros, dwarves emerged from the mountains.\n\n### Humans\nArising from the intersection of all elemental forces, humans proved the most adaptable.\n\n## The First Kingdoms\n\nThe mortal races built their first cities near leyline convergences, harnessing residual titan magic.",
+    "sortOrder": 1,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "pg_003",
+    "sectionId": "sec_001",
+    "title": "The Sundering",
+    "content": "# The Sundering\n\n*800 years ago*\n\nThe greatest catastrophe in recorded history.\n\n## The Cause\n\nTwo rival arcane empires, the **Valdris Imperium** and the **Thauman Concordat**, engaged in a magical arms race that culminated in disaster.\n\n## The Event\n\nBoth empires attempted to awaken sleeping titans to use as weapons. The conflicting rituals tore reality apart, creating the **Shattered Wastes**.\n\n## Aftermath\n\n- Both empires destroyed completely\n- The Shattered Wastes remain unstable to this day\n- Magic became less predictable worldwide\n- Several titan fragments were scattered across the world\n\n> *\"The sky burned purple for a year. Those who looked upon the Sundering directly lost their minds.\"* — Sage Aldric's Account",
+    "sortOrder": 2,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "pg_004",
+    "sectionId": "sec_002",
+    "title": "The Whisperwood",
+    "content": "# The Whisperwood\n\n**Type:** Ancient Sentient Forest  \n**Location:** Central Aetheria  \n**Danger Level:** Moderate to High\n\n## Overview\n\nThe Whisperwood is not merely a forest—it is a single, vast organism that has existed since before the Mortal Dawn.\n\n## Notable Features\n\n### The Speaking Trees\nTrees in the Whisperwood communicate through a fungal network. Those with nature magic can tap into this network.\n\n### The Verdant Court\nHidden elven cities exist within the canopy, protected by ancient pacts with the forest itself.\n\n### The Heart Tree\nAt the forest's center stands a colossal tree said to contain the memories of every creature that has ever lived within the wood.\n\n## Encounters\n\n| Creature | CR | Notes |\n|----------|-----|-------|\n| Whisper Wolves | 2 | Silent, pack hunters |\n| Dryads | 1 | Protectors of groves |\n| Treant Elders | 9 | Ancient guardians |",
+    "sortOrder": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "pg_005",
+    "sectionId": "sec_005",
+    "title": "Crystal Drake",
+    "content": "# Crystal Drake\n\n**Type:** Dragon (Elemental)  \n**Size:** Large  \n**CR:** 8\n\n## Description\n\nWingless dragons that have evolved to feed on raw magical energy. Their scales are crystalline and refract light into rainbow patterns.\n\n## Habitat\n\nFound exclusively in the Crystal Peaks and areas of high magical concentration.\n\n## Abilities\n\n- **Mana Drain:** Can absorb spell energy directed at them\n- **Crystal Breath:** Cone of crystalline shards (6d6 piercing)\n- **Arcane Sight:** Can see magical auras and leylines\n- **Spell Reflection:** 50% chance to reflect spells of 3rd level or lower\n\n## Behavior\n\nUnlike true dragons, crystal drakes are not inherently aggressive. They become territorial only when their food source (magical energy) is threatened.\n\n## Loot\n\n- Crystal Drake Scales (500gp each, used in arcane crafting)\n- Mana Core (2000gp, rare alchemical component)",
+    "sortOrder": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "pg_006",
+    "sectionId": "sec_007",
+    "title": "Session 1: The Beginning",
+    "content": "# Session 1: The Beginning\n\n**Date:** TBD  \n**Location:** Port Aether\n\n## Summary\n\n*Session notes go here...*\n\n## Key Events\n\n1. Party met at the Salty Siren tavern\n2. Received quest from mysterious patron\n3. Discovered clue about the Sundering artifacts\n\n## NPCs Encountered\n\n- **Barkeep Mira** - Knows local rumors\n- **Hooded Figure** - Quest giver, identity unknown\n\n## Loot Gained\n\n- 50 gold pieces\n- Mysterious map fragment\n- Potion of Healing x2\n\n## Notes for Next Session\n\n- Party heading toward Whisperwood\n- Need to introduce the main antagonist\n- Reminder: Player X absent next week",
+    "sortOrder": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "pg_007",
+    "sectionId": "sec_010",
+    "title": "Archmage Valerius",
+    "content": "# Archmage Valerius\n\n**Role:** Quest Giver / Mentor  \n**Location:** Celestial Observatory  \n**Alignment:** Neutral Good\n\n## Appearance\n\nElderly human male with long silver beard. Wears deep blue robes embroidered with constellations. Missing his left eye, replaced with a crystal that glows faintly.\n\n## Personality\n\n- Speaks in riddles and metaphors\n- Genuinely cares about preventing another Sundering\n- Has a dry, sardonic sense of humor\n- Easily distracted by magical phenomena\n\n## Background\n\nOne of the few living mortals who witnessed the Sundering (sustained by magic). Has dedicated his life to understanding what happened and preventing it from recurring.\n\n## Connections\n\n- Former mentor to the antagonist\n- Has contacts in every major city\n- Owes a debt to the Fey Courts\n\n## Voice Notes\n\n*\"Ah, young ones. You remind me of myself, centuries ago. Full of certainty. Certainty is a luxury the wise cannot afford.\"*",
+    "sortOrder": 0,
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]
